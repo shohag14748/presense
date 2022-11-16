@@ -1,0 +1,161 @@
+{% paginate blog.articles by 4 %}
+
+  <div class="module-wrapper blogs-page">
+    <div class="module blog">
+  {% comment %}
+      <div class="module-header blog-header">
+        <div class="module-title blog-title">
+          <h1>
+            {% if current_tags %}<a href="{{ blog.url }}">{% endif %}
+            {{ "blogs.blog.title" | t: title: blog.title }}
+            {% if current_tags %}</a>{% endif %}
+            <a class="blog-rss" href="{{ blog.url }}.atom">&#xea9c</a>
+          </h1>
+        </div>
+        {% if linklists.blogs.links.size > 0 %}
+          <div class="blog-menu">
+            {% for link in linklists.blogs.links %}
+              <a class="button outline blog-subtitle-button {% if link.url == blog.url %}active{% endif %}" href="{{ link.url }}">
+                {{ link.title }}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+  {% endcomment %}
+      <div class="module-body">
+{% comment %}
+        {% if blog.tags.size > 0 %}
+          <div class="blog-tags-wrapper">
+            <span>{{ 'blogs.blog.filter_by_tag' | t }}:</span>
+            <div class="blog-tags-list">
+              {% for tag in blog.tags %}
+                <span class="blog-tags-list-item">{{ tag | link_to_tag: tag }}</span>
+              {% endfor %}
+            </div>
+            {% if current_tags %}
+              <div class="blog-tags-current">
+                <p>{{ 'blogs.blog.posts_tagged' | t }} <em>"{{ current_tags.first }}"</em></p>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+{% endcomment %}
+
+
+        {% if blog.tags.size > 0 %}
+          <div class="blog-tags-wrapper">
+            <div class="swiper swiper-container-{{ section.id }}">
+              <div class="blog-tags-list swiper-wrapper">
+                <div class="swiper-slide swiper-slide slide1">
+<!--                   <a class="tag all button-all-category-tags" href="{{ blog.url }}">All</a> -->
+                  <a class="tag all button-all-category-tags button-category-tag active" href="javascript:void(0)" data-hrf="{{ blog.url }}" data-tag="all">All</a>
+                </div>
+                {%- for tag in blog.all_tags -%}
+                <div class="swiper-slide">
+<!--                   <a class="tag {{ tag | downcase}}" href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a> -->
+                       <a class="tag {{ tag | downcase}} button-category-tag" href="javascript:void(0)" data-hrf="{{ blog.url }}/tagged/{{ tag | handle }}" data-tag="{{ tag | downcase }}">{{ tag }}</a>
+                </div>
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        
+        <div class="row post-wrapper-parent">
+          <div class="post-wrapper" data-next-url="{{ paginate.next.url }}">
+          {% for article in blog.articles %}
+            {% render 'article-list-item-custom', article: article %}
+          {% else %}
+            <div class="empty">
+              <p>{{ 'blogs.blog.empty' | t }}</p>
+            </div>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% if paginate.previous or paginate.next %}
+<a class="loadMoreBtn dynamic-blog-button" {% comment %}onclick="loadMoreBlog()"{% endcomment %}><span class="txt">VIEW MORE</span><span class="dots">...</span></a>
+{% endif %}
+  {% comment %}
+  {% if paginate.previous or paginate.next %}
+    {% render 'pagination', paginate: paginate %}
+  {% endif %}
+  {% endcomment %}
+{% endpaginate %}
+
+
+<style>
+  .loadMoreBtn{
+    width: 210px;
+    font-size: 16px;
+    line-height: 26px;
+    text-align: center;
+    letter-spacing: 0.16em;
+    color: #9E9E9E;
+    border: 4px solid #9E9E9E;
+    border-radius: 50px;
+    padding: 15px;
+    font-weight: 900;
+    margin: auto;
+    display: block;
+    text-transform: uppercase;
+    margin-bottom: 100px;
+    cursor: pointer;
+  }
+  .loadMoreBtn:hover{
+      background-color: #cf7e2d;
+      color: #fff;
+      border-color: #cf7e2d;
+  }
+  .loadMoreBtn .dots{
+  	display:none;
+  }
+  @media (max-width:720px){
+    .loadMoreBtn{
+      width: 145px;
+      font-size: 13px;
+      padding: 8px;
+      margin-top: -50px;
+    }
+  }
+</style>
+
+
+<script>
+  var swiper = new Swiper(".swiper-container-{{ section.id }}", {
+    slidesPerView: "auto",
+    spaceBetween: 10,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    breakpoints: {
+      721: {
+        spaceBetween: 20,
+      },
+    }
+  });
+
+  // const hideAllCardsPost = () => {
+  //   $('.post-wrapper .list-item').hide();
+  // }
+
+  // $('.button-category-tag').on('click', function(){
+  //   const tag = $(this).data('tag');
+  //   hideAllCardsPost();
+  //   $(`span[data-tag="${tag}"`).parents('.list-item').show();
+  // })
+  
+  // $('.button-all-category-tags').on('click', function(){
+  //   hideAllCardsPost();
+  //   $('.post-wrapper .list-item').show();
+  // })
+</script>
+
+
+
+
+

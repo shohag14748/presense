@@ -1,0 +1,76 @@
+{% assign blog_index = false %}
+{% if template.name == 'blog' %}
+  {% assign blog_index = true %}
+{% endif %}
+
+<article class="post">
+  <header class="post-title">
+    <h1>
+      {% if blog_index %}<a href="{{ article.url }}">{% endif %}
+        {{ article.title }}
+      {% if blog_index %}</a>{% endif %}
+    </h1>
+    {% if article.excerpt_or_content %}
+    <p>
+    {{ article.excerpt_or_content }}
+    </p>
+      {% endif %}
+    <div class="author">
+      <div class="author-image">
+        <svg width="50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 41.9" style="enable-background:new 0 0 33 41.9" xml:space="preserve">
+          <path fill="currentColor" d="M-.3-.3v42.6h33.5V-.3H-.3zM32.9 27c0 .7-.1 1.4-.2 2-.1.5-.1.9-.2 1.4-.1.6-.3 1.3-.4 1.9-.1.5-.2.9-.4 1.4-.2.6-.4 1.1-.6 1.7-.2.5-.5 1-.8 1.5-.5.8-1.1 1.5-1.8 2-.5.4-1 .7-1.5 1-.4.2-.9.4-1.3.6-.3.1-.7.3-1 .4s-.6.2-.9.2c-.4.1-.8.2-1.1.3s-.6.1-.9.2c-.4.1-.7.1-1.1.2-.5.1-1 .1-1.5.2-1.1.1-2.2.1-3.2.1-.7 0-1.3 0-2-.1-.5 0-1-.1-1.5-.2-.3 0-.7-.1-1-.1s-.6-.1-.9-.2c-.2 0-.4-.1-.6-.1-.4-.1-.9-.2-1.3-.3-.5-.1-.9-.3-1.4-.5s-1-.5-1.5-.7c-.9-.5-1.7-1.2-2.3-1.9-.5-.6-.9-1.2-1.2-1.9-.2-.4-.3-.7-.5-1.1-.1-.3-.2-.7-.3-1.1-.1-.5-.3-.9-.4-1.4-.1-.3-.2-.7-.2-1-.1-.3-.2-.7-.2-1-.1-.3-.1-.7-.1-1-.1-.9-.2-1.8-.3-2.6-.2-1.3-.3-2.4-.3-3.4v-2.4c0-1.1.1-2.2.1-3.3 0-.6.1-1.2.1-1.7 0-.6.1-1.1.2-1.6.1-.6.1-1.2.2-1.8.1-.5.2-.9.3-1.4.1-.4.2-.7.2-1.1.1-.5.3-1 .4-1.4.2-.5.3-.9.5-1.3L2.6 6c.3-.7.8-1.4 1.3-2 .5-.6 1-1.1 1.7-1.5.6-.3 1.2-.7 1.8-1 .3-.2.7-.2 1-.4l.9-.3c.4-.1.8-.2 1.1-.3.5-.1 1.1-.2 1.6-.3.5-.1.9-.1 1.4-.1 1 0 2-.1 2.7-.1 1 0 1.6 0 2.3.1.5 0 1.1.1 1.6.2.4 0 .8.1 1.2.1l1.5.3c.5.1 1 .2 1.4.4.5.1.9.3 1.3.5s.8.3 1.1.5c.8.4 1.6 1 2.2 1.7.5.6 1 1.2 1.3 2 .5.9.9 1.9 1.2 3 .2.7.4 1.4.6 2.2.1.5.2.9.3 1.4l.3 1.5c.1.7.2 1.5.2 2.2.1.6.1 1.3.2 1.9v.1c0 1.1.1 2.1.1 3.2s.1 2.2.1 3.3c0 .8-.1 1.6-.1 2.4z"></path>
+        </svg>
+        <img src="{{ article.user.image | img_url: 'master' }}" alt="{{ article.author }}">
+      </div>
+      <p class="author_name"><span>by</span> {{ article.author }}</p>
+    </div>
+  </header>
+  {% comment %}
+  <div class="post-subtitle post-meta">
+      <span>{{ article.published_at | date: format: 'short_month' }}</span>
+      <span>{{ 'blogs.article_item.posted_by' | t }}: {{ article.author }}</span>
+      {% if article.tags.size > 0 %}
+      <span>
+        {% for tag in article.tags %}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="post-tags">{{ tag }}</a>{% unless forloop.last %},&nbsp;{% endunless %}
+        {% endfor %}
+      </span>
+    {% endif %}
+  </div>
+  {% endcomment %}
+  
+  {% if blog_index and article.image %}
+    <div class="post-image-container">
+      {%
+        render 'rimg',
+        class: 'post-image',
+        img: article.image,
+        size: '700x700',
+        lazy: true
+      %}
+    </div>
+  {% endif %}
+
+  <div class="post-content rte">
+      {{ article.content }}
+  </div>
+
+  
+{% comment %}
+  <div class="post-content rte">
+    {% if blog_index %}
+      {{ article.excerpt_or_content }}
+    {% else %}
+      {{ article.content }}
+    {% endif %}
+  </div>
+{% endcomment %}
+  {% if blog_index %}
+    <footer class="post-meta">
+      <a class="button post-button" href="{{ article.url }}">
+        {{ 'blogs.article_item.read_more' | t }}
+        <span class="icon icon-arrow-right"></span>
+      </a>
+    </footer>
+  {% endif %}
+</article>

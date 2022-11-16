@@ -1,0 +1,97 @@
+{% comment %}
+  @param item_type {string}
+    Either `product` or `article`
+
+  @param item {object}
+    Define either `product` or `article` as item
+{% endcomment %}
+
+{% capture permalink_url %}{{ shop.url }}{{ item.url }}{% endcapture %}
+
+{% capture title %}
+  {{- item.title | strip_html | escape -}}
+{% endcapture %}
+
+<div class="share-buttons no-count" data-permalink="{{ permalink_url }}">
+  <a
+    class="
+      share-buttons-item
+      share-facebook
+    "
+    target="_blank"
+    href="//www.facebook.com/sharer.php?u={{ permalink_url }}">
+    <span>{{ 'general.social.facebook' | t }}</span>
+    <span class="share-count"></span>
+  </a>
+
+  <a
+    class="
+      share-buttons-item
+      share-twitter
+    "
+    target="_blank"
+    href="//twitter.com/share?url={{ permalink_url }}">
+    <span>{{ 'general.social.twitter' | t }}</span>
+    <span class="share-count"></span>
+  </a>
+
+  {% if item_type == 'product' %}
+    <a
+      class="
+        share-buttons-item
+        share-pinterest
+      "
+      target="_blank"
+      href="//pinterest.com/pin/create/button/?url={{ permalink_url }}&amp;media=http:{{ item | img_url: '1024x1024' }}&amp;description={{ item.title | url_escape }}">
+      <span>{{ 'general.social.pinterest' | t }}</span>
+      <span class="share-count"></span>
+    </a>
+  {% elsif item_type == 'article' %}
+    {% if item.image %}
+      {% assign src = item.image | img_url: '1024x1024' %}
+    {% else %}
+      {% assign src = false %}
+      {% assign img_tag = '<img' %}
+      {% if item.excerpt_or_content contains img_tag %}
+        {% assign src = item.excerpt_or_content | split: 'src="' %}
+        {% assign src = src[1] | split: '"' | first %}
+      {% endif %}
+    {% endif %}
+
+    {% if src %}
+      <a
+        class="
+          share-buttons-item
+          share-pinterest
+        "
+        target="_blank"
+        href="//pinterest.com/pin/create/button/?url={{ permalink_url }}&amp;media=http:{{ src }}&amp;description={{ item.title | escape }}">
+        <span>{{ 'general.social.pinterest' | t }}</span>
+        <span class="share-count"></span>
+      </a>
+    {% else %}
+      <a
+        class="
+          share-buttons-item
+          share-pinterest
+          disabled
+        "
+      >
+        <span>{{ 'general.social.pinterest' | t }}</span>
+        <span class="share-count"></span>
+      </a>
+    {% endif %}
+  {% endif %}
+
+  <a
+    class="
+      share-buttons-item
+      share-email
+    "
+    target="_blank"
+    title="{{ 'general.social.email_title' | t }}"
+    href="mailto:?subject={{ 'general.social.email_subject' | t: title: title }}&amp;body={{ 'general.social.email_message' | t: title: title, name: shop.name }}%0D%0A%0D%0A{{ permalink_url }}"
+  >
+    <span>{{ 'general.social.email' | t }}</span>
+  </a>
+</div>

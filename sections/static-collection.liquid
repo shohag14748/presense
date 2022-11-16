@@ -1,0 +1,208 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="static-collection"
+>
+</script>
+
+{% paginate collection.products by section.settings.products-per-page %}
+  {%
+    render 'collection-header',
+    collection_image: section.settings.show_featured_image,
+  %}
+
+  <div class="module-wrapper style-default">
+    <div
+      class="
+        module
+        collection
+        collection--banner-{{ section.settings.show_featured_image }}
+        {% if collection.handle == 'all' %}
+          all
+        {% endif %}
+      "
+    >
+      {% unless collection.image and section.settings.show_featured_image %}
+        <div class="module-header">
+          <div class="module-title">
+            {% if collection.handle == 'all' %}
+              <h1>{{ 'collections.collection.all_products' | t }}</h1>
+            {% else %}
+              <h1 class="module-title">{{ collection.title }}</h1>
+            {% endif %}
+          </div>
+          {% if collection.description != blank %}
+            <div
+              class="
+                module-subtitle
+                collection-subtitle
+                rte
+              "
+            >
+              {{ collection.description }}
+            </div>
+          {% endif %}
+        </div>
+      {% endunless %}
+      <div class="module-body collection-body">
+        {% if section.settings.enable_filtering or section.settings.enable_sorting %}
+          <div class="filter-container">
+            {% if section.settings.enable_filtering and collection.filters.size > 0 %}
+              {%
+                render 'faceted-filters',
+                filters: collection.filters,
+                class_prefix: 'faceted'
+              %}
+            {% endif %}
+
+            {% if section.settings.enable_sorting %}
+              {% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
+
+              <div class="collection__sort-wrapper">
+                <label class="collection__sort-title">
+                  {{ 'collections.collection.sort_by' | t }}
+                </label>
+
+                <div class="select-wrapper">
+                  <div class="selected-text">
+                    {%- for option in collection.sort_options -%}
+                      {%- if option.value == current_sort -%}
+                        {{ option.name }}
+                        {% break %}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+
+                  <select class="{% if collection.current_vendor %}vendor-collection{% endif %} collection-sort" data-collection-sort>
+                    {%- for option in collection.sort_options -%}
+                      <option
+                        value="{{ option.value }}"
+                        {%- if option.value == current_sort -%}
+                          selected
+                        {%- endif -%}
+                      >
+                        {{ option.name }}
+                      </option>
+                    {%-  endfor -%}
+                  </select>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          {% for filter in collection.filters %}
+            {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}
+              {% capture clear_url %}
+                {{ collection.url }}?sort_by={{ current_sort }}
+              {% endcapture %}
+              {%
+                render 'faceted-filters-active',
+                filters: collection.filters,
+                class_prefix: 'faceted',
+                clear_url: clear_url,
+              %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% assign product_count = collection.products.size | plus: 0 %}
+        {% assign value = product_count | modulo: 2 %}
+        {% assign product_count_odd = 'true' %}
+
+        {% if value == 0 %}
+          {% assign product_count_odd = 'false' %}
+        {% endif %}
+
+        {%
+          render 'collection-item-default',
+          paginate: paginate,
+          product_count: product_count,
+          product_count_odd: product_count_odd,
+        %}
+
+        {% if  product_count == 0 %}
+          <p>{{ "products.product.no_product" | t }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if paginate.previous or paginate.next %}
+    {%
+      render 'pagination',
+      paginate: paginate,
+    %}
+  {% endif %}
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "Collection page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "label": "Show collection image"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable filtering",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable sorting",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products-per-page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 50,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_placement",
+      "label": "Product information placement",
+      "options": [
+        {
+          "value": "overlay",
+          "label": "Overlay image"
+        },
+        {
+          "value": "below",
+          "label": "Below image"
+        }
+      ],
+      "default": "overlay",
+      "info": "Show product information as an overlay on the product image, or below."
+    },
+    {
+      "type": "header",
+      "content": "Stock level indicator"
+    },
+    {
+      "type": "checkbox",
+      "id": "stock_overlay_show",
+      "label": "Show indicator",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "stock-overlay-threshold",
+      "label": "Display when stock is lower than:",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    }
+  ]
+}
+
+{% endschema %}

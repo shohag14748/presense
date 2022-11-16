@@ -1,0 +1,234 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="dynamic-testimonials"
+></script>
+
+  <div class="module-wrapper style-{{ section.settings.style }} border {% if section.settings.slider_deactive %}three-block{% endif %}">
+
+<div class="container">   
+<div class="wraper">
+    {% if section.settings.title != blank or section.settings.subtitle != blank %}
+      <div class="module-header">
+        {% if section.settings.subtitle != blank %}
+          <p class="module-subtitle">
+            {{ section.settings.subtitle }}
+          </p>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h3 class="module-title dynamic-testimonials-title">
+            {{ section.settings.title }}
+          </h3>
+        {% endif %}
+        {% if section.settings.desc != blank %}
+          <p class="module-desc">
+            {{ section.settings.desc }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- Slider main container -->
+  {% assign count = 0 %}
+{% for block in section.blocks %}
+       {% assign count = count | plus: 1 %}
+{% endfor %}
+<div class="sp-wrap {% if count == 2 %} two-col{% endif %}">
+{% if section.settings.slider_deactive == false %}
+    <div class="swiper swiper-container-{{ section.id }}">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+{% endif %}
+          {% for block in section.blocks %}
+              <div class="{% if section.settings.slider_deactive == false %}swiper-slide{% else %}block-wrap{% endif %} step-{{forloop.index}}">
+                <div class="dynamic-testimonials-slides-list-item-container">
+                  <div class="dynamic-testimonials-slides-list-item-body">
+                    {% if block.settings.image %}
+                      <div class="reviwe-image">
+                        {%
+                          render 'rimg',
+                          img: block.settings.image,
+                          size: '700x',
+                          lazy: false,
+                          crop: false
+                        %}
+                      </div>
+                    {% endif %}
+<div class="desc">
+{% if block.settings.step != blank %}
+                    <div class="dynamic-testimonial-step">
+                      {{ block.settings.step }}
+                    </div>
+{% endif %}
+{% if block.settings.step_title != blank %}
+                    <div class="dynamic-testimonial-step_title">
+                      {{ block.settings.step_title }}
+                    </div>
+{% endif %}
+{% if block.settings.quote != blank %}
+                    <div class="dynamic-testimonial-desc">
+                      {{ block.settings.quote }}
+                    </div>
+{% endif %}
+</div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+{% if section.settings.slider_deactive == false %}
+        </div>
+      </div>
+{% endif %}
+      <!-- If we need navigation buttons -->
+{% comment %}
+      <div class="swiper-btn-prev swiper-btn btn-prev-{{ section.id }}"><span class="icon icon-angle-left"></span></div>
+      <div class="swiper-btn-next swiper-btn btn-next-{{ section.id }}"><span class="icon icon-angle-right"></span></div>
+{% endcomment %}
+<!-- If we need pagination -->
+    <div class="swiper-pagination swiper-pagination-{{ section.id }}"></div>
+  </div>
+
+{% if section.settings.btn != blank %}
+  <a class="dynamic-button button outline" href="{{ section.settings.btn_link }}">
+    {{ section.settings.btn }}  <span class="icon icon-angle-right"></span>
+  </a>
+{% endif %}
+</div>   
+
+</div>
+</div>
+{% if section.settings.slider_deactive == false %}
+<script>
+var swiper = new Swiper('.swiper-container-{{ section.id }}', {
+  pagination: {
+    el: ".swiper-pagination",
+    clickable: true,
+  },
+  loop: true,
+  nextButton: '.btn-next-{{ section.id }}',
+  prevButton: '.btn-prev-{{ section.id }}',
+  slidesPerView: 1.1,
+  spaceBetween: 20,
+  navigation: {
+    nextEl: ".btn-next-{{ section.id }}",
+    prevEl: ".btn-prev-{{ section.id }}",
+  },
+  breakpoints: {
+    720: {
+      slidesPerView: 2,
+    },
+    1020: {
+      slidesPerView: 3,
+      allowTouchMove:false,
+    }
+  },
+});
+
+</script>
+{% endif %}
+{% schema %}
+{
+  "name": "Steps slider",
+  "class":"steps-slider",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "desc",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "btn",
+      "label": "Button text"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_deactive",
+      "label": "Dectivate slide show?"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "step",
+          "label": "step"
+        },
+        {
+          "type": "text",
+          "id": "step_title",
+          "label": "Step title"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Step description"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "background image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Steps slider",
+      "settings": {
+        "style": "default"
+      },
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "quote": "<p>Showcase up to six testimonials to build trust with potential customers.</p>"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "quote": "<p>Showcase up to six testimonials to build trust with potential customers.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

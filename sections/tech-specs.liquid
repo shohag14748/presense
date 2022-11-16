@@ -1,0 +1,236 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="dynamic-testimonials"
+></script>
+
+  <div class="module-wrapper style-{{ section.settings.style }} border">
+
+<div class="container">   
+  <div class="wraper">
+      {% if section.settings.title != blank or section.settings.subtitle != blank %}
+        <div class="module-header">
+          {% if section.settings.subtitle != blank %}
+            <p class="module-subtitle">
+              {{ section.settings.subtitle | escape }}
+            </p>
+          {% endif %}
+          {% if section.settings.title != blank %}
+            <h3 class="module-title dynamic-testimonials-title">
+              {{ section.settings.title | escape }}
+            </h3>
+          {% endif %}
+        </div>
+      {% endif %}
+
+<div class="bottom-content">
+    <div class="sp-wrap">
+      {% for block in section.blocks %}
+        {% if forloop.index <= 4 %}
+          <div class="content block-{{forloop.index}}">
+            <div class="head">
+              {% if block.settings.svg_icon %}
+                {{ block.settings.svg_icon }}
+              {% elsif block.settings.image %}
+                  {%
+                    render 'rimg',
+                    img: block.settings.image,
+                    size: '1440x',
+                    lazy: true,
+                    crop: false
+                  %}
+              {% endif %}
+              {% if block.settings.title != blank %}
+                {{ block.settings.title }}
+              {% endif %}
+            </div>
+            {% if block.settings.desc != blank %}
+              <p class="desc">{{ block.settings.desc }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="images">
+      <div class="swiper bg-slider swiper-container-bg-{{ section.id }}">
+          <div class="swiper-wrapper">
+            {%- for i in (1..9) -%}
+              {%- assign image_index = 'image-' | append: i -%}
+              {% if section.settings[image_index] != blank %}
+                <div class="swiper-slide">
+                  <div class="reviwe-image">
+                    {%
+                      render 'rimg',
+                      img: section.settings[image_index],
+                      size: '1440x1412',
+                      lazy: false,
+                      crop: false
+                    %}
+                  </div>
+                </div>
+              {% endif %}
+            {%- endfor -%}
+          </div>
+      </div>
+    </div>
+    <div class="sp-wrap sp-wrap2">
+      {% for block in section.blocks %}
+        {% if forloop.index > 4 %}
+          <div class="content block-{{forloop.index}}">
+            <div class="head">
+              {% if block.settings.svg_icon %}
+                {{ block.settings.svg_icon }}
+              {% elsif block.settings.image %}
+                  {%
+                    render 'rimg',
+                    img: block.settings.image,
+                    size: '1440x',
+                    lazy: true,
+                    crop: false
+                  %}
+              {% endif %}
+              {% if block.settings.title != blank %}
+                {{ block.settings.title }}
+              {% endif %}
+            </div>
+            {% if block.settings.desc != blank %}
+              <p class="desc">{{ block.settings.desc }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+</div>
+
+  </div>   
+</div>
+
+</div>
+<script>
+  new Swiper('.swiper-container-bg-{{ section.id }}', {
+    loop: true,
+    slidesPerView: 1,
+    effect: 'fade',
+    autoplay: {
+     delay: 4000,
+   },
+});
+</script>
+{% schema %}
+{
+  "name": "Tech Specs",
+  "class":"tech-specs",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-1",
+      "label": "background image 1",
+      "info": "More then 2 background image will show as slider"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-2",
+      "label": "background image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-3",
+      "label": "background image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-4",
+      "label": "background image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-5",
+      "label": "background image 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-6",
+      "label": "background image 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-7",
+      "label": "background image 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-8",
+      "label": "background image 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "image-9",
+      "label": "background image 9"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "icon image"
+        },
+        {
+          "type": "textarea",
+          "id": "svg_icon",
+          "label": "SVG icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "textarea",
+          "id": "desc",
+          "label": "description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Tech Specs",
+      "settings": {
+        "style": "default"
+      }
+    }
+  ]
+}
+
+{% endschema %}

@@ -1,0 +1,179 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="static-search"
+>
+</script>
+
+<div class="module-wrapper style-light">
+  <div class="module search">
+    <div class="module-header search-header">
+      <div class="module-title search-title">
+        {% if search.performed %}
+          <h1>{{ 'general.search.header_results' | t }}</h1>
+        {% else %}
+          <h1>{{ 'general.search.header' | t }}</h1>
+        {% endif %}
+      </div>
+      <div class="module-subtitle search-subtitle">
+        {% paginate search.results by 10 %}
+          {% if search.performed %}
+            {% if search.results.size > 0 %}
+              {{ 'general.search.results_text' | t: search_terms: search.terms, results_count: search.results_count, results: results }}
+            {% else %}
+              <p>{{ 'general.search.no_results' | t: search_terms: search.terms }}</p>
+            {% endif %}
+          {% endif %}
+        {% endpaginate %}
+      </div>
+      <div class="module-form">
+        <form class="search-form" action="{{ routes.search_url }}" method="get">
+          <input class="search-input" name="q" type="text" placeholder="{{ 'general.general.search_placeholder' | t }}" value="{{ search.terms }}" />
+          <div class="search-submit">
+            <span class="search-submit-icon icon icon-search"></span>
+            <input type="submit" value="{{ 'general.search.submit' | t }}" />
+          </div>
+        </form>
+      </div>
+      {% if search.performed and section.settings.enable_filtering %}
+        <div class="filter-container">
+          {%
+            render 'faceted-filters',
+            filters: search.filters,
+            class_prefix: 'faceted',
+          %}
+        {%- capture clear_url -%}
+          {{ routes.search_url }}?q={{ search.terms | url_encode }}
+        {%- endcapture -%}
+
+        </div>
+        {% for filter in search.filters %}
+          {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}
+              {%-
+                render 'faceted-filters-active',
+                filters: search.filters,
+                class_prefix: 'faceted',
+                clear_url: clear_url,
+              -%}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif%}
+    </div>
+    <div class="module-body search-body">
+      {% paginate search.results by 9 %}
+        {% if search.performed %}
+          {% if search.results.size > 0 %}
+
+            {% assign product_count = 0 %}
+
+            {% for item in search.results %}
+              {% if item.price %}
+                {% assign product_count = product_count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+
+            {% assign product_value = product_count | modulo: 2 %}
+            {% if product_value == 0 %}
+              {% assign product_count_odd = true %}
+            {% endif %}
+
+            {% if product_count < 2 %}
+              {% assign product_list_class = "column-1" %}
+            {% else %}
+              {% if product_count_odd == false %}
+                {% assign product_list_class = "column-2" %}
+              {% else %}
+                {% assign product_list_class = "column-3" %}
+              {% endif %}
+            {% endif %}
+
+            {% if product_count > 0 %}
+              <div class="list {{ product_list_class }}">
+                {% for item in search.results %}
+                  {% if item.price %}
+                    {%
+                      render 'product-list-item',
+                      item: item,
+                    %}
+                    {% assign group = 'product_found' %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% assign page_count = 0 %}
+            {% for item in search.results %}
+              {% unless item.price %}
+                {% assign page_count = page_count | plus: 1 %}
+              {% endunless %}
+            {% endfor %}
+
+            {% assign page_value = page_count | modulo: 2 %}
+            {% if page_value == 0 %}
+              {% assign page_count_odd = true %}
+            {% endif %}
+
+            {% if page_count < 2 %}
+              {% assign page_list_class = 'column-1' %}
+              {% assign page_column = '1' %}
+            {% else %}
+              {% if page_count_odd == false %}
+                {% assign page_list_class = 'column-2' %}
+                {% assign page_column = '2' %}
+              {% else %}
+                {% assign page_list_class = 'column-3' %}
+                {% assign page_column = '3' %}
+              {% endif %}
+            {% endif %}
+
+            {% if page_count > 0 %}
+              <div class="list {{ page_list_class }}">
+                {% for item in search.results %}
+                  {% unless item.price %}
+                    <div class="list-item list-item-inline">
+                      <div class="list-container">
+                        <div class="list-text-wrapper">
+                          <div class="list-title">
+                            {{ item.title }}
+                          </div>
+                          <div class="list-text">
+                            {{ item.content | strip_html | truncate: 90 }}
+                          </div>
+                          <div class="list-cta">
+                            <a class="button list-button" href="{{ item.url }}">{{ "general.search.read_more" | t }}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% assign group = 'page_found' %}
+                  {% endunless %}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+          {% endif %}
+          {% if paginate.previous or paginate.next %}
+            {% render 'pagination', paginate: paginate %}
+          {% endif %}
+        {% endif %}
+      {% endpaginate %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Search page",
+  "class": "static-search",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable filtering",
+      "default": true
+    }
+  ]
+}
+
+{% endschema %}

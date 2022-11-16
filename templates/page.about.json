@@ -1,0 +1,1 @@
+{"sections":{"main":{"type":"static-page","settings":{}},"team":{"type":"module-team","blocks":{"block-1":{"type":"team_member","settings":{}},"block-2":{"type":"team_member","settings":{}},"block-3":{"type":"team_member","settings":{}},"block-4":{"type":"team_member","settings":{}}},"block_order":["block-1","block-2","block-3","block-4"],"settings":{}}},"order":["main","team"]}

@@ -1,0 +1,34 @@
+{% if collection.image and collection_image %}
+  <div class="collection-header">
+    {%
+      render 'rimg',
+      img: collection.image,
+      size: '1024x1024',
+      class: 'collection-image',
+      lazy: true,
+    %}
+
+    <div class="collection-details">
+      <div class="module-header">
+        <div class="module-title">
+          {% if collection.handle == 'all' %}
+            <h1>{{ 'collections.collection.all_products' | t }}</h1>
+          {% else %}
+            <h1 class="module-title">{{ collection.title }}</h1>
+          {% endif %}
+        </div>
+        {% if collection.description != blank %}
+          <div
+            class="
+              module-subtitle
+              collection-subtitle
+              rte
+            "
+          >
+            {{ collection.description }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}

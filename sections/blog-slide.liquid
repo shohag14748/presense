@@ -1,0 +1,356 @@
+{% assign blog = blogs[section.settings.blog] %}
+{% assign blog_url = blog.url %}
+
+<script
+  type="application/json"
+  data-section-type="dynamic-blog-posts"
+  data-section-id="{{ section.id }}"
+>
+</script>
+
+<div class="module-wrapper style-{{ section.settings.style }} border blog-slide">
+  <div class="module dynamic-blog">
+
+    {% if section.settings.title != blank %}
+      <div class="module-header dynamic-blog-header">
+        {% if section.settings.subtitle != blank %}
+          <p class="module-subtitle dynamic-blog-subtitle">
+            {{ section.settings.subtitle | escape }}
+          </p>
+        {% endif %}
+        <h3 class="module-title dynamic-blog-title">
+          {{ section.settings.title | escape }}
+        </h3>
+      </div>
+    {% endif %}
+
+    
+    <div class="module-body dynamic-blog-body">
+      <div class="list">
+        <div class="swiper swiper-container-{{ section.id }}">
+          <!-- Additional required wrapper -->
+          <div class="swiper-wrapper">
+
+          {% if section.settings.article_1 != blank or section.settings.article_2 != blank or section.settings.article_3 != blank or section.settings.article_4 != blank %}
+            {% for i in (1..4) %}
+              {% assign setting_name = 'article_' | append: i %}
+              {% assign article = section.settings[setting_name] %}
+              
+              {% assign has_image = false %}
+              {% assign image = false %}
+              {% assign image_alt = article.title | strip_html | escape %}
+              {% assign background_image = false %}
+              {% assign image_size = '600x' %}
+
+{% if article.url %}
+<div class="list-item list-item-inline swiper-slide">
+              <a class="list-container" href="{{ article.url }}">
+                {% if article.image %}
+                  <div class="list-image-wrapper">
+                  {% if article.tags.size > 0 %}
+                    {% for tag in article.tags %}
+                      {% if forloop.first %}
+                        <span class="tags"><span class="tag {{ tag | downcase }}">{{ tag }}</span></span>
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                    <div
+                      class="list-cover"
+                    >
+                      {%
+                        render 'rimg',
+                        class: 'list-image',
+                        img: article.image,
+                        size: image_size,
+                        crop: 'center',
+                        lazy: true,
+                      %}
+                    </div>
+                  </div>
+                {% endif %}
+                <div class="list-text-wrapper">
+                  <div class="list-title">
+                    {{ article.title }}
+                  </div>
+                  <div class="list-desc">
+                    {{ article.excerpt }}
+                  </div>
+                  <div class="author">
+                    <div class="author-image">
+                      <svg width="50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 41.9" style="enable-background:new 0 0 33 41.9" xml:space="preserve">
+                        <path fill="currentColor" d="M-.3-.3v42.6h33.5V-.3H-.3zM32.9 27c0 .7-.1 1.4-.2 2-.1.5-.1.9-.2 1.4-.1.6-.3 1.3-.4 1.9-.1.5-.2.9-.4 1.4-.2.6-.4 1.1-.6 1.7-.2.5-.5 1-.8 1.5-.5.8-1.1 1.5-1.8 2-.5.4-1 .7-1.5 1-.4.2-.9.4-1.3.6-.3.1-.7.3-1 .4s-.6.2-.9.2c-.4.1-.8.2-1.1.3s-.6.1-.9.2c-.4.1-.7.1-1.1.2-.5.1-1 .1-1.5.2-1.1.1-2.2.1-3.2.1-.7 0-1.3 0-2-.1-.5 0-1-.1-1.5-.2-.3 0-.7-.1-1-.1s-.6-.1-.9-.2c-.2 0-.4-.1-.6-.1-.4-.1-.9-.2-1.3-.3-.5-.1-.9-.3-1.4-.5s-1-.5-1.5-.7c-.9-.5-1.7-1.2-2.3-1.9-.5-.6-.9-1.2-1.2-1.9-.2-.4-.3-.7-.5-1.1-.1-.3-.2-.7-.3-1.1-.1-.5-.3-.9-.4-1.4-.1-.3-.2-.7-.2-1-.1-.3-.2-.7-.2-1-.1-.3-.1-.7-.1-1-.1-.9-.2-1.8-.3-2.6-.2-1.3-.3-2.4-.3-3.4v-2.4c0-1.1.1-2.2.1-3.3 0-.6.1-1.2.1-1.7 0-.6.1-1.1.2-1.6.1-.6.1-1.2.2-1.8.1-.5.2-.9.3-1.4.1-.4.2-.7.2-1.1.1-.5.3-1 .4-1.4.2-.5.3-.9.5-1.3L2.6 6c.3-.7.8-1.4 1.3-2 .5-.6 1-1.1 1.7-1.5.6-.3 1.2-.7 1.8-1 .3-.2.7-.2 1-.4l.9-.3c.4-.1.8-.2 1.1-.3.5-.1 1.1-.2 1.6-.3.5-.1.9-.1 1.4-.1 1 0 2-.1 2.7-.1 1 0 1.6 0 2.3.1.5 0 1.1.1 1.6.2.4 0 .8.1 1.2.1l1.5.3c.5.1 1 .2 1.4.4.5.1.9.3 1.3.5s.8.3 1.1.5c.8.4 1.6 1 2.2 1.7.5.6 1 1.2 1.3 2 .5.9.9 1.9 1.2 3 .2.7.4 1.4.6 2.2.1.5.2.9.3 1.4l.3 1.5c.1.7.2 1.5.2 2.2.1.6.1 1.3.2 1.9v.1c0 1.1.1 2.1.1 3.2s.1 2.2.1 3.3c0 .8-.1 1.6-.1 2.4z"/>
+                      </svg>
+                      <img src="{{ article.user.image | img_url: 'master' }}" alt="{{ article.author }}">
+                    </div>
+                    <p class="author_name"><span>by</span> {{ article.author }}</p>
+                  </div>
+
+                  <div class="list-cta dynamic-blog-cta">
+                    <span class="list-link">
+                    READ NOW <span class="icon icon-angle-right"></span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </div>
+{% endif %}
+
+            
+            {% endfor %}
+          {% endif %}
+
+              {% comment %}            
+        {% if section.settings.blog != 'none' and blog.articles.size > 0 %}
+          {% for article in blog.articles limit: section.settings.posts-to-show %}
+            {% assign has_image = false %}
+            {% assign image = false %}
+            {% assign image_alt = article.title | strip_html | escape %}
+            {% assign background_image = false %}
+            {% assign image_size = '480x' %}
+
+            {% if section.settings.posts-to-show == "2" %}
+              {% assign image_size = '600x' %}
+            {% endif %}
+
+            <div class="list-item list-item-inline swiper-slide">
+              <a class="list-container" href="{{ article.url }}">
+                {% if article.image %}
+                  <div class="list-image-wrapper">
+                  {% if article.tags.size > 0 %}
+                    {% for tag in article.tags %}
+                      {% if forloop.first %}
+                        <span class="tags"><span class="tag {{ tag | downcase }}">{{ tag }}</span></span>
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                    <div
+                      class="list-cover"
+                    >
+                      {%
+                        render 'rimg',
+                        class: 'list-image',
+                        img: article.image,
+                        size: image_size,
+                        crop: 'center',
+                        lazy: true,
+                      %}
+                    </div>
+                  {% comment %}
+                    <div class="list-overlay"></div>
+                    <div class="list-icon">
+                      {%
+                        render 'font-icon',
+                        icon: 'add-outline',
+                        class: 'list-item-icon',
+                        size: '1x',
+                      %}
+                    </div>
+                  {% endcomment %}
+                  </div>
+                {% endif %}
+                <div class="list-text-wrapper">
+                  <div class="list-title">
+                    {{ article.title }}
+                  </div>
+                  <div class="list-desc">
+                    {{ article.excerpt }}
+                  </div>
+                  <div class="author">
+                    <div class="author-image">
+                      <svg width="50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 41.9" style="enable-background:new 0 0 33 41.9" xml:space="preserve">
+                        <path fill="currentColor" d="M-.3-.3v42.6h33.5V-.3H-.3zM32.9 27c0 .7-.1 1.4-.2 2-.1.5-.1.9-.2 1.4-.1.6-.3 1.3-.4 1.9-.1.5-.2.9-.4 1.4-.2.6-.4 1.1-.6 1.7-.2.5-.5 1-.8 1.5-.5.8-1.1 1.5-1.8 2-.5.4-1 .7-1.5 1-.4.2-.9.4-1.3.6-.3.1-.7.3-1 .4s-.6.2-.9.2c-.4.1-.8.2-1.1.3s-.6.1-.9.2c-.4.1-.7.1-1.1.2-.5.1-1 .1-1.5.2-1.1.1-2.2.1-3.2.1-.7 0-1.3 0-2-.1-.5 0-1-.1-1.5-.2-.3 0-.7-.1-1-.1s-.6-.1-.9-.2c-.2 0-.4-.1-.6-.1-.4-.1-.9-.2-1.3-.3-.5-.1-.9-.3-1.4-.5s-1-.5-1.5-.7c-.9-.5-1.7-1.2-2.3-1.9-.5-.6-.9-1.2-1.2-1.9-.2-.4-.3-.7-.5-1.1-.1-.3-.2-.7-.3-1.1-.1-.5-.3-.9-.4-1.4-.1-.3-.2-.7-.2-1-.1-.3-.2-.7-.2-1-.1-.3-.1-.7-.1-1-.1-.9-.2-1.8-.3-2.6-.2-1.3-.3-2.4-.3-3.4v-2.4c0-1.1.1-2.2.1-3.3 0-.6.1-1.2.1-1.7 0-.6.1-1.1.2-1.6.1-.6.1-1.2.2-1.8.1-.5.2-.9.3-1.4.1-.4.2-.7.2-1.1.1-.5.3-1 .4-1.4.2-.5.3-.9.5-1.3L2.6 6c.3-.7.8-1.4 1.3-2 .5-.6 1-1.1 1.7-1.5.6-.3 1.2-.7 1.8-1 .3-.2.7-.2 1-.4l.9-.3c.4-.1.8-.2 1.1-.3.5-.1 1.1-.2 1.6-.3.5-.1.9-.1 1.4-.1 1 0 2-.1 2.7-.1 1 0 1.6 0 2.3.1.5 0 1.1.1 1.6.2.4 0 .8.1 1.2.1l1.5.3c.5.1 1 .2 1.4.4.5.1.9.3 1.3.5s.8.3 1.1.5c.8.4 1.6 1 2.2 1.7.5.6 1 1.2 1.3 2 .5.9.9 1.9 1.2 3 .2.7.4 1.4.6 2.2.1.5.2.9.3 1.4l.3 1.5c.1.7.2 1.5.2 2.2.1.6.1 1.3.2 1.9v.1c0 1.1.1 2.1.1 3.2s.1 2.2.1 3.3c0 .8-.1 1.6-.1 2.4z"/>
+                      </svg>
+                      <img src="{{ article.user.image | img_url: 'master' }}" alt="{{ article.author }}">
+                    </div>
+                    <p class="author_name"><span>by</span> {{ article.author }}</p>
+                  </div>
+            {% comment %}
+                  <div class="list-meta">
+                    {{ article.published_at | date: format: 'short_month' }}
+                  </div>
+                  <div class="list-text">
+                    {{ article.excerpt_or_content | strip_newlines | strip_html | truncate: 140 }}
+                  </div>
+            {% endcomment %}
+                  <div class="list-cta dynamic-blog-cta">
+                    <span class="list-link">
+                    {% comment %}
+                    {{ "home.blog.read_more" | t }}
+                    {% endcomment %}
+                    READ NOW <span class="icon icon-angle-right"></span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        {% else %}
+          {% assign blog_url = '#' %}
+          {%- capture background_image -%}
+            {%-
+              render 'placeholder_svg_uri',
+              placeholder: 'image'
+            -%}
+          {%- endcapture -%}
+
+          {% for i in (1..section.settings.posts-to-show) %}
+            <div class="list-item">
+              <a class="list-container" href="#">
+                <div class="list-image-wrapper">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg list-image' }}
+                  <div class="list-cover onboarding" style="background-image: url('{{- background_image | strip_newlines  }}')"></div>
+                  <div class="list-overlay"></div>
+                  <div class="list-icon">
+                    {%
+                      render 'font-icon',
+                      icon: 'add-outline',
+                      class: 'list-item-icon',
+                      size: '1x',
+                    %}
+                  </div>
+                </div>
+                <div class="list-text-wrapper">
+                  <div class="list-title">
+                    {{ 'onboarding.blog.title' | t }}
+                  </div>
+                  <div class="list-meta">
+                    {{ 'now' | date: "%s" | date: "%b %d, %Y" }}
+                  </div>
+                  <div class="list-text">
+                    {{ 'onboarding.blog.excerpt' | t }}
+                  </div>
+                  <div class="list-cta dynamic-blog-cta">
+                    <span class="list-link">{{ "home.blog.read_more" | t }}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        {% endif %}
+                          {% endcomment %}   
+      </div>
+      <div class="swiper-btn-prev swiper-btn btn-prev-{{ section.id }}"><span class="icon icon-angle-left"></span></div>
+      <div class="swiper-btn-next swiper-btn btn-next-{{ section.id }}"><span class="icon icon-angle-right"></span></div>
+      </div>
+      </div>
+    </div>
+
+        {% comment %}
+    <div class="module-footer dynamic-blog-footer">
+      <a class="dynamic-blog-button button outline" href="{{ blog_url }}">
+        {{ "home.blog.see_all" | t }}
+        VISIT THE BLOG <span class="icon icon-angle-right"></span>
+      </a>
+    </div>
+        {% endcomment %}
+  </div>
+</div>
+
+
+<script>
+var swiper = new Swiper('.swiper-container-{{ section.id }}', {
+  loop: true,
+  nextButton: '.btn-next-{{ section.id }}',
+  prevButton: '.btn-prev-{{ section.id }}',
+  slidesPerView: 1,
+  spaceBetween: 20,
+  centeredSlides:true,
+  navigation: {
+    nextEl: ".btn-next-{{ section.id }}",
+    prevEl: ".btn-prev-{{ section.id }}",
+  },
+  breakpoints: {
+    721: {
+      slidesPerView: 1.15,
+    },
+    992: {
+      slidesPerView: 1.15,
+    },
+    1200: {
+      slidesPerView: 1.1,
+    }
+  },
+});
+</script>
+                          
+{% schema %}
+{
+  "name": "Blog slide",
+  "settings": [
+    {
+      "type": "article",
+      "id": "article_1",
+      "label": "Blog post"
+    },
+    {
+      "type": "article",
+      "id": "article_2",
+      "label": "Blog post"
+    },
+    {
+      "type": "article",
+      "id": "article_3",
+      "label": "Blog post"
+    },
+    {
+      "type": "article",
+      "id": "article_4",
+      "label": "Blog post"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "posts-to-show",
+      "label": "Number of posts to show",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Blog posts"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Blog",
+      "name": "Blog slide",
+      "settings": {
+        
+      }
+    }
+  ]
+}
+
+{% endschema %}

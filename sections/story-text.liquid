@@ -1,0 +1,114 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="image-text"
+></script>
+
+<div class="module-wrapper style-{{ section.settings.style }} border {{ section.settings.section_class }}" id="story_text">
+  <div class="wraper">
+    <div class="row">
+      <div class="col">
+        {% if section.settings.left_desc != blank %}
+          <p class="desc">
+            {{ section.settings.left_desc }}
+          </p>
+        {% endif %}
+      </div>
+      <div class="col">
+        {% if section.settings.left_desc != blank %}
+          <div class="image">
+            {% if section.settings.image %}
+              <div class="block-image">
+                {%
+                  render 'rimg',
+                  img: section.settings.image,
+                  size: '600x600',
+                  lazy: false,
+                  crop: false
+                %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="bottom">
+      {% if section.settings.bottom_desc != blank %}
+        <p class="desc">
+          {{ section.settings.bottom_desc }}
+        </p>
+      {% endif %}
+      {% if section.settings.sign_image %}
+        <div class="block-image">
+          {%
+            render 'rimg',
+            img: section.settings.sign_image,
+            size: '600x600',
+            lazy: false,
+            crop: false
+          %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Story Text",
+  "class":"story_text",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "textarea",
+      "id": "left_desc",
+      "label": "left description"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Block image"
+    },
+    {
+      "type": "textarea",
+      "id": "bottom_desc",
+      "label": "bottom description"
+    },
+    {
+      "type": "image_picker",
+      "id": "sign_image",
+      "label": "Sign image"
+    },
+    {
+      "type": "text",
+      "id": "section_class",
+      "label": "Section class"
+    }
+  ],
+  "presets": [
+    {
+      "category": "image",
+      "name": "Story Text",
+      "settings": {
+        "style": "default"
+      }
+    }
+  ]
+}
+
+{% endschema %}

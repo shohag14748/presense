@@ -1,0 +1,549 @@
+{% if section.settings.enable and section.blocks.size > 0 %}
+
+
+  {% if section.settings.layout == 'full-window' %}
+    <script>
+      document.body.classList.add('has-slideshow-full-window');
+    </script>
+  {% else %}
+    <script>
+      document.body.classList.remove('has-slideshow-full-window');
+    </script>
+  {% endif %}
+
+  {% assign image_size = '2048x' %}
+
+  <section
+    class="static-slideshow-wrapper {{ section.settings.layout }} {{ section.settings.transition }} {{ section.settings.section_class }}"
+    {% if section.settings.layout == 'full-window' %}
+    {% comment %} This data attribute is used by the header {% endcomment %}
+      data-full-window-slideshow
+    {% endif %}
+    data-static-slideshow
+    >
+
+    <div class="static-slideshow-loader"></div>
+
+    {% if section.blocks.size > 1 %}
+      <a
+        class="static-slideshow-navigation static-slideshow-previous icon icon-angle-left btn-prev-{{ section.id }}"
+        href="#"
+        tabindex="0"
+        aria-label="{{ 'home.slideshow.prev' | t }}"
+      >
+        <span tabindex="-1"></span>
+      </a>
+      <a
+        class="static-slideshow-navigation static-slideshow-next icon icon-angle-right btn-next-{{ section.id }}"
+        href="#"
+        tabindex="0"
+        aria-label="{{ 'home.slideshow.next' | t }}"
+      >
+        <span tabindex="-1"></span>
+      </a>
+{% comment %}
+      <div class="static-slideshow-pagination">
+        {% for block in section.blocks %}
+          {%- capture pagination_class -%}
+            pagination-list-item
+            pagination-slide-{{ forloop.index }}
+            {% if forloop.first %}active{% endif %}
+          {%- endcapture %}
+          <span
+            data-slide-id="dynamic-slide-{{ forloop.index }}"
+            class="{{ pagination_class | strip_newlines }}">
+            <span></span>
+          </span>
+        {% endfor %}
+      </div>
+{% endcomment %}
+    {% endif %}
+
+
+
+
+{% if section.settings.custom_slide %}
+
+
+
+    <div class="static-slideshow banner-slide">
+
+
+    <div class="swiper swiper-container-{{ section.id }}">
+    <div class="swiper-wrapper">
+
+
+      {% for block in section.blocks %}
+        {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+
+        {% assign has_content = true %}
+        {% assign onboarding = false %}
+        {% if
+          block.settings.title == blank and
+          block.settings.subtitle == blank and
+          block.settings.cta == blank and
+          block.settings.button == blank %}
+          {% assign has_content = false %}
+          {% assign onboarding = true %}
+        {% endif %}
+
+        {% assign placeholder_image_style = 'lifestyle-' | append: current %}
+        {%- capture placeholder_background_image -%}
+          {%-
+            render 'placeholder_svg_uri',
+            placeholder: placeholder_image_style
+          -%}
+        {%- endcapture -%}
+
+        {%- capture background_image_style -%}
+          {%- if block.settings.image -%}
+            {%
+              render 'rimg',
+              background: true,
+              crop: false,
+              img: block.settings.image,
+              size: image_size,
+              lazy: true
+            %}
+          {%- else -%}
+            style="background-image: url('{{ placeholder_background_image }}');"
+          {%- endif -%}
+        {%- endcapture -%}
+
+         {%- capture background_image_style2 -%}
+          {%- if block.settings.mobile_image -%}
+            {%
+              render 'rimg',
+              background: true,
+              crop: false,
+              img: block.settings.mobile_image,
+              size: image_size,
+              lazy: true
+            %}
+          {%- else -%}
+            style="background-image: url('{{ placeholder_background_image }}');"
+          {%- endif -%}
+        {%- endcapture -%}
+
+
+
+        {%- capture block_class -%}
+          {% if forloop.first %}active{% endif %}
+          text-aligned-{{ block.settings.alignment }}
+          overlay
+          overlay-{{ block.settings.overlay_style }}
+          overlay-opacity-{{ block.settings.overlay_opacity | divided_by: 10 }}
+        {%- endcapture %}
+        <div
+          id="slide-{{ forloop.index }}"
+          class="swiper-slide {{ block_class | strip_newlines }}"
+          {% if section.settings.layout == 'full-window' %}
+            {{ background_image_style }}
+          {% endif %}
+          data-slide-text="{{ block.settings.text_style }}"
+          data-slide="{{ forloop.index }}"
+          {{ block.shopify_attributes }}>
+
+          {% if block.settings.mobile_image != blank %} 
+          <div
+            class="slide-image-container d-sm-block d-none"
+            {{ background_image_style2 }}
+          >
+
+            {% if block.settings.url != blank and block.settings.image %}
+              <a class="slide-image-link" href="{{ block.settings.url }}">
+            {% endif %}
+
+            {% if block.settings.image %}
+              {%
+                render 'rimg',
+                class: 'slide-image',
+                img: block.settings.mobile_image,
+                crop: false,
+                size: image_size,
+                lazy: true
+              %}
+            {% else %}
+              {{ placeholder_image_style | placeholder_svg_tag: 'placeholder-svg slide-image' }}
+            {% endif %}
+
+            {% if block.settings.url != blank and block.settings.image %}
+              </a>
+            {% endif %}
+          </div>
+          {% endif %}
+
+
+          <div
+            class="slide-image-container {% if block.settings.mobile_image != blank %} d-sm-none{% endif %}"
+            {{ background_image_style }}
+          >
+
+            {% if block.settings.url != blank and block.settings.image %}
+              <a class="slide-image-link" href="{{ block.settings.url }}">
+            {% endif %}
+
+            {% if block.settings.image %}
+              {%
+                render 'rimg',
+                class: 'slide-image',
+                img: block.settings.image,
+                crop: false,
+                size: image_size,
+                lazy: true
+              %}
+            {% else %}
+              {{ placeholder_image_style | placeholder_svg_tag: 'placeholder-svg slide-image' }}
+            {% endif %}
+
+            {% if block.settings.url != blank and block.settings.image %}
+              </a>
+            {% endif %}
+          </div>
+
+          {% if block.settings.cta == blank and block.settings.url != blank %}
+            <a class="slide-image-link" href="{{ block.settings.url }}">
+          {% endif %}
+
+          {% if has_content %}
+            <div class="text-wrap">
+            <div class="slide-text {{ block.settings.text_style }}" 
+            style="
+              {% if block.settings.alignment_vertical != 'center'  %}
+                {{ block.settings.alignment_vertical }}
+                :
+                {% if block.settings.alignment_vertical_value != blank  %}
+                  {{ block.settings.alignment_vertical_value }}
+                {% else %}
+                  0
+                {% endif %}
+                ;
+              {% endif %}
+              {% if block.settings.alignment_vertical == 'bottom' %}
+                top:auto;
+              {% endif %}
+            "  
+            >
+              {% if block.settings.title != blank %}
+                <h2 class="slide-text-heading">{{ block.settings.title }}</h2>
+              {% endif %}
+
+              {% if block.settings.subtitle != blank %}
+                <p class="slide-text-subheading">{{ block.settings.subtitle }}</p>
+              {% endif %}
+
+              {% if block.settings.cta != blank and block.settings.url != blank %}
+                <a class="button outline" href="{{ block.settings.url }}">
+                  <span>{{ block.settings.cta | escape }}</span>
+                {% comment %}
+                  <span class="icon icon-arrow-right"></span>
+                {% endcomment %}
+                </a>
+              {% endif %}
+
+
+              {% if block.settings.show_app %}
+                <br>
+                <a class="app-btn" href="{{ block.settings.app_url }}">
+                  <img src="https://cdn.shopify.com/s/files/1/0618/6015/1453/files/app-store-badge.png?v=1659866968"/>
+                </a>
+              {% endif %}
+
+            </div>
+            </div>
+          {% endif %}
+
+          {% if block.settings.cta == blank and block.settings.url != blank %}
+            </a>
+          {% endif %}
+
+        </div>
+
+    
+      {% endfor %}
+
+
+    </div>
+    </div>
+
+
+    </div>
+
+
+
+
+
+{% else %}
+    <div class="static-" >
+      no slide
+    </div>
+
+{% endif %}
+
+<script>
+new Swiper('.swiper-container-{{ section.id }}', {
+    navigation: {
+      nextEl: ".btn-next-{{ section.id }}",
+      prevEl: ".btn-prev-{{ section.id }}",
+    },    
+    loop: true,
+    slidesPerView: 1,
+    paginationClickable: true,
+    spaceBetween: 0,
+    effect: 'fade',
+    speed: 500,
+    autoHeight: true,
+});
+</script>
+  </section>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Slideshow22",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "full-width",
+          "label": "Full width"
+        },
+        {
+          "value": "full-window",
+          "label": "Full window"
+        }
+      ],
+      "default": "full-width",
+      "info": "[Style examples](https:\/\/support.pixelunion.net\/hc\/en-us\/articles\/360026622093-Using-Launch-s-sections-Slideshow)"
+    },
+    {
+      "type": "select",
+      "id": "transition",
+      "label": "Transition",
+      "options": [
+        {
+          "value": "transition-slide",
+          "label": "Slide"
+        },
+        {
+          "value": "transition-fade",
+          "label": "Fade"
+        }
+      ],
+      "default": "transition-fade"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 5,
+      "max": 10,
+      "step": 1,
+      "unit": "sec",
+      "label": "Change slides every",
+      "default": 7
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto rotate slides",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_class",
+      "label": "Section Class"
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_slide",
+      "label": "slider with swiper",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "alignment_vertical",
+          "label": "Text alignment vertical",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "text",
+          "id": "alignment_vertical_value",
+          "label": "alignment vertical value",
+          "info": "set value as (10px or 10%)"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "label": "Text style",
+          "options": [
+            {
+              "value": "light",
+              "label": "Light"
+            },
+            {
+              "value": "dark",
+              "label": "Dark"
+            }
+          ],
+          "default": "light"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Image for Mobile"
+        },
+        {
+          "type": "select",
+          "id": "overlay_style",
+          "label": "Overlay",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "gradient",
+              "label": "Gradient"
+            },
+            {
+              "value": "primary",
+              "label": "Primary color"
+            },
+            {
+              "value": "secondary",
+              "label": "Secondary color"
+            },
+            {
+              "value": "black",
+              "label": "Black"
+            }
+          ],
+          "default": "gradient"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay opacity",
+          "min": 10,
+          "max": 90,
+          "step": 10,
+          "unit": "%",
+          "default": 70
+        },
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Heading",
+          "default": "Slideshow"
+        },
+        {
+          "type": "textarea",
+          "id": "subtitle",
+          "label": "Subheading",
+          "default": "Introduce customers to your shop with lifestyle imagery and product photography."
+        },
+        {
+          "type": "text",
+          "id": "cta",
+          "label": "Button text"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_app",
+          "label": "Show app download"
+        },
+        {
+          "type": "text",
+          "id": "app_url",
+          "label": "App download link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Slideshow",
+      "name": "Slideshow22",
+      "settings": {},
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Slideshow",
+            "subtitle": "Introduce customers to your shop with lifestyle imagery and product photography."
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Slideshow",
+            "subtitle": "Introduce customers to your shop with lifestyle imagery and product photography."
+          }
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

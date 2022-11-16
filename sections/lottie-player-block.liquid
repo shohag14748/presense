@@ -1,0 +1,26 @@
+<div class="module-wrapper" data-section-id="{{ section.id }}" data-section-type="lottie-player-block">
+  <div class="module lottie-block" >
+    {% if section.settings.json_link != blank %}
+      <lottie-player src="{{ section.settings.json_link }}"  background="transparent"  speed="1"  style="width:100%;"  loop  autoplay></lottie-player>
+    {% endif %}  
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Lottie PLayer Block",
+    "settings": [
+      {
+        "type": "url",
+        "id": "json_link",
+        "label": "JSON link"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Lottie Player Block",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,155 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="dynamic-inspiration"
+></script>
+
+<div class="module-wrapper style-{{ section.settings.style }} border {{ section.settings.section_class }}">
+
+  <div class="container">   
+    <div class="wraper">
+      <div class="text-content">
+        {% if section.settings.title != blank or section.settings.subtitle != blank %}
+          <div class="module-header">
+            {% if section.settings.title != blank %}
+              <h3 class="module-title dynamic-testimonials-title">
+                {{ section.settings.title | escape }}
+              </h3>
+            {% endif %}
+            {% if section.settings.subtitle != blank %}
+              <p class="module-subtitle">
+                {{ section.settings.subtitle | escape }}
+              </p>
+            {% endif %}
+            {% if section.settings.btn != blank %}
+              <a class="dynamic-button button outline" href="{{ section.settings.btn_link }}">
+                {{ section.settings.btn }}  <span class="icon icon-arrow-right"></span>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+     </div>
+        <div class="image-blocks">
+        {% for block in section.blocks %}
+          {% if block.settings.image %}
+            <div class="reviwe-image" style="{% if block.settings.image_height != blank %}height: {{ block.settings.image_height }};{% endif %} animation: marquee2 {{block.settings.animation_time}}s linear infinite;">
+              {%
+                render 'rimg',
+                img: block.settings.image,
+                size: '5000x250',
+                lazy: false,
+                crop: false
+              %}
+              {%
+                render 'rimg',
+                img: block.settings.image,
+                size: '5000x250',
+                lazy: false,
+                crop: false
+              %}
+            </div>
+          {% endif %}
+        {% endfor %}
+        </div>
+    
+    
+          
+    
+    
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inspiration type 3",
+  "class":"inspiration-type-2",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "btn",
+      "label": "Button text"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "section_class",
+      "label": "Section class"
+    },
+    {
+      "type": "checkbox",
+      "id": "exp",
+      "label": "Extra width"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "inspiration",
+      "name": "inspiration",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "background image"
+        },
+        {
+          "type": "text",
+          "id": "image_height",
+          "label": "Image height"
+        },
+        {
+          "type": "text",
+          "id": "image_width",
+          "label": "Image height"
+        },
+        {
+          "type": "text",
+          "id": "animation_time",
+          "label": "Animation Duration",
+          "default": "20"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "image",
+      "name": "Inspiration type 3",
+      "settings": {
+        "style": "default"
+      }
+    }
+  ]
+}
+
+{% endschema %}

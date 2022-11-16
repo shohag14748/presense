@@ -1,0 +1,1 @@
+{"sections":{"main":{"type":"static-page","settings":{}},"contact-form":{"type":"module-contact-form","settings":{"style":"default"}},"map":{"type":"module-map","disabled":true,"settings":{"enable":false,"location_name":"Pixel Union","location_address":"1005 Langley St, Victoria, BC V8W, Canada","api_key":""}}},"order":["main","contact-form","map"]}

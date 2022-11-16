@@ -1,0 +1,285 @@
+{% if article.image %}
+  <div class="module-wrapper">
+    
+    {% if article.tags.size > 0 %}
+      <span class="tags">
+        {% for tag in article.tags %}
+          <span class="tag {{ tag | downcase }}">{{ tag }}</span>
+        {% endfor %}
+      </span>
+    {% endif %}
+  
+    <div class="module column-1 full-width article-intro">
+      <div class="module-body clearfix">
+        <div
+          class="image-container article-intro-image-container"
+          {%
+            render 'rimg',
+            background: true,
+            img: article.image,
+            size: '2048x2048',
+            lazy: true
+          %}
+        >
+          {%
+            render 'rimg',
+            class: 'article-intro-image',
+            img: article.image,
+            size: '2048x2048',
+            lazy: true
+          %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="module-wrapper">
+  <div class="module article">
+    <div class="module-body clearfix">
+      <div class="post-wrapper">
+        {% render 'article-list-item', article: article %}
+      </div>
+    </div>
+  </div>
+</div>
+{% assign title-blog = article.title %}
+
+<div class="module-wrapper style-1 border blog-posts blog-posts-want">
+  {% if blog.articles.size > 0 %}
+  <div class="module dynamic-blog">
+    <div class="module-header dynamic-blog-header">
+      <h3 class="module-title dynamic-blog-title">
+        More posts we think you’ll love...
+      </h3>
+    </div>
+    <div class="module-body dynamic-blog-body">
+      <div class="list column-2 clearfix">
+          {% assign count = 0 %}
+          {% for article in blog.articles limit: section.settings.posts-to-show %}
+            {% if title-blog != article.title and count < 2 %}
+              {{ count }}
+               {% assign count = count | plus: 1 %}
+            {% assign has_image = false %}
+            {% assign image = false %}
+            {% assign image_alt = article.title | strip_html | escape %}
+            {% assign background_image = false %}
+            {% assign image_size = '480x' %}
+
+            {% if section.settings.posts-to-show == "2" %}
+              {% assign image_size = '600x' %}
+            {% endif %}
+
+            <div class="list-item list-item-inline">
+              <a class="list-container" href="{{ article.url }}">
+                {% if article.image %}
+                  <div class="list-image-wrapper">
+                  {% if article.tags.size > 0 %}
+                    {% for tag in article.tags %}
+                      {% if forloop.first %}
+                        <span class="tags"><span class="tag {{ tag | downcase }}">{{ tag }}</span></span>
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                    <div
+                      class="list-cover"
+                    >
+                      {%
+                        render 'rimg',
+                        class: 'list-image',
+                        img: article.image,
+                        size: image_size,
+                        crop: 'center',
+                        lazy: true,
+                      %}
+                    </div>
+                  </div>
+                {% endif %}
+                  <div class="list-text-wrapper">
+                    <div class="list-title">
+                      {{ article.title }}
+                    </div>
+                    <div class="author">
+                      <div class="author-image">
+                        <svg width="50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 41.9" style="enable-background:new 0 0 33 41.9" xml:space="preserve">
+                          <path fill="currentColor" d="M-.3-.3v42.6h33.5V-.3H-.3zM32.9 27c0 .7-.1 1.4-.2 2-.1.5-.1.9-.2 1.4-.1.6-.3 1.3-.4 1.9-.1.5-.2.9-.4 1.4-.2.6-.4 1.1-.6 1.7-.2.5-.5 1-.8 1.5-.5.8-1.1 1.5-1.8 2-.5.4-1 .7-1.5 1-.4.2-.9.4-1.3.6-.3.1-.7.3-1 .4s-.6.2-.9.2c-.4.1-.8.2-1.1.3s-.6.1-.9.2c-.4.1-.7.1-1.1.2-.5.1-1 .1-1.5.2-1.1.1-2.2.1-3.2.1-.7 0-1.3 0-2-.1-.5 0-1-.1-1.5-.2-.3 0-.7-.1-1-.1s-.6-.1-.9-.2c-.2 0-.4-.1-.6-.1-.4-.1-.9-.2-1.3-.3-.5-.1-.9-.3-1.4-.5s-1-.5-1.5-.7c-.9-.5-1.7-1.2-2.3-1.9-.5-.6-.9-1.2-1.2-1.9-.2-.4-.3-.7-.5-1.1-.1-.3-.2-.7-.3-1.1-.1-.5-.3-.9-.4-1.4-.1-.3-.2-.7-.2-1-.1-.3-.2-.7-.2-1-.1-.3-.1-.7-.1-1-.1-.9-.2-1.8-.3-2.6-.2-1.3-.3-2.4-.3-3.4v-2.4c0-1.1.1-2.2.1-3.3 0-.6.1-1.2.1-1.7 0-.6.1-1.1.2-1.6.1-.6.1-1.2.2-1.8.1-.5.2-.9.3-1.4.1-.4.2-.7.2-1.1.1-.5.3-1 .4-1.4.2-.5.3-.9.5-1.3L2.6 6c.3-.7.8-1.4 1.3-2 .5-.6 1-1.1 1.7-1.5.6-.3 1.2-.7 1.8-1 .3-.2.7-.2 1-.4l.9-.3c.4-.1.8-.2 1.1-.3.5-.1 1.1-.2 1.6-.3.5-.1.9-.1 1.4-.1 1 0 2-.1 2.7-.1 1 0 1.6 0 2.3.1.5 0 1.1.1 1.6.2.4 0 .8.1 1.2.1l1.5.3c.5.1 1 .2 1.4.4.5.1.9.3 1.3.5s.8.3 1.1.5c.8.4 1.6 1 2.2 1.7.5.6 1 1.2 1.3 2 .5.9.9 1.9 1.2 3 .2.7.4 1.4.6 2.2.1.5.2.9.3 1.4l.3 1.5c.1.7.2 1.5.2 2.2.1.6.1 1.3.2 1.9v.1c0 1.1.1 2.1.1 3.2s.1 2.2.1 3.3c0 .8-.1 1.6-.1 2.4z"></path>
+                        </svg>
+                        <img src="{{ article.user.image | img_url: 'master' }}" alt="{{ article.author }}">
+                      </div>
+                      <p class="author_name"><span>by</span> {{ article.author }}</p>
+                    </div>
+                    <div class="list-cta dynamic-blog-cta">
+                      <span class="list-link">
+                      READ NOW <span class="icon icon-angle-right"></span>
+                      </span>
+                    </div>
+                  </div>
+              </a>
+            </div>
+            {% endif %}
+          {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+                      
+
+
+
+
+
+
+
+
+{% if section.settings.show_share_buttons %}
+  <div class="module-wrapper">
+    <div class="module module-share">
+      <div class="module-body clearfix">
+        {%
+          render 'share-buttons',
+          item: article,
+          item_type: 'article'
+        %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if article.comments_enabled? %}
+  <div id="comments" class="module-wrapper style-light">
+    <div class="module module-post-comments">
+      <div class="module-header">
+        <div class="module-title post-comments-title">
+          <h3>{{ article.comments_count }} {{ 'blogs.article_item.comment_count' | t: count: article.comments_count }}</h3>
+        </div>
+      </div>
+      {% if article.comments_count > 0 %}
+        <div class="module-body">
+          <div class="post-comments">
+            <div class="post-comments-list column-1">
+              {% paginate article.comments by 10 %}
+                {% for comment in article.comments %}
+                <div class="post-comment" id="comment-{{ comment.id }}">
+                  <p class="meta"><a href="{{ comment.url }}" class="post-comment-date">{{ comment.created_at | date: format: 'short_month' }}</a>
+                  &bull; {{ 'blogs.article_item.posted_by' | t }} <strong>{{ comment.author }}</strong></p>
+                  <div class="rte">{{ comment.content }}</div>
+                </div>
+                {% endfor %}
+                {% if paginate.previous or paginate.next %}
+                  {% render 'pagination', paginate: paginate %}
+                {% endif %}
+              {% endpaginate %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div id="comment_form" class="module-wrapper style-default">
+    <div class="module module-post-comments">
+      <div class="module-header">
+        <div class="module-title post-comments-title">
+          <h3>{{ 'blogs.article_item.leave_comment' | t }}</h3>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="post-comments-form-container">
+          {% form article %}
+            {% if form.posted_successfully? %}
+              <div class="post-comment-success-message">
+                <p class="post-comment-message">
+                  {% if blog.moderated? %}
+                    {{ 'blogs.article_item.comment_pending_html' | t: link: article.url }}
+                  {% else %}
+                    {% capture article_comment_link %}{{ article.url }}#comments{% endcapture %}
+                    {{ 'blogs.article_item.comment_posted_html' | t: link: article_comment_link }}
+                  {% endif %}
+                </p>
+              </div>
+            {% endif %}
+            {% if form.errors %}
+              <div class="post-comment-error-message">
+                <p class="post-comment-message">{{ 'blogs.article_item.error_message' | t }}</p>
+              </div>
+            {% endif %}
+            <div class="input-wrapper {% if form.errors contains "author" %}error{% endif %}">
+              <input type="text" placeholder="{{ 'general.general.name_placeholder' | t }}" value="{{ form.author }}" name="comment[author]">
+            </div>
+            <div class="input-wrapper {% if form.errors contains "email" %}error{% endif %}">
+              <input type="email" placeholder="{{ 'general.general.email_placeholder' | t }}" value="{{ form.email }}" name="comment[email]">
+            </div>
+            <div class="input-wrapper {% if form.errors contains "body" %}error{% endif %}">
+              <textarea placeholder="{{ 'general.general.message' | t }}" rows="6" name="comment[body]">{{ form.body }}</textarea>
+            </div>
+            <div class="input-wrapper">
+              <input class="button outline" type="submit" value="{{ 'general.general.submit' | t }}">
+            </div>
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% comment %}
+
+{% assign current_found = false %}
+{% assign done = false %}
+{% for a in blog.articles %}
+  {% if current_found and done == false %}
+    {% assign next_article = a %}
+    {% assign done = true %}
+  {% endif %}
+  {% unless done %}
+    {% if a.id == article.id %}
+      {% assign current_found = true %}
+    {% else %}
+      {% assign prev_article = a %}
+    {% endif %}
+  {% endunless %}
+{% endfor %}
+
+{% if blog.next_article or blog.previous_article %}
+  <div class="module-wrapper style-gradient">
+    <div class="module module-pagination pagination-article">
+      <div class="module-body article-pagination-body clearfix">
+        {% if prev_article %}
+          <div class="pagination-button pagination-previous pagination-article-previous">
+            <a class="pagination-button-link pagination-article-button-link pagination-article-previous-link" href="{{ prev_article.url }}">
+              <span class="icon icon-arrow-left pagination-button-icon pagination-article-button-icon"></span>
+              <span class="pagination-article-title">{{ prev_article.title }}</span>
+              <span class="pagination-article-date">{{ prev_article.published_at | date: format: 'short_month' }}</span>
+            </a>
+          </div>
+        {% endif %}
+        {% if next_article %}
+          <div class="pagination-button pagination-next pagination-article-next">
+            <a class="pagination-button-link pagination-article-button-link pagination-article-next-link" href="{{ next_article.url }}">
+              <span class="pagination-article-title">{{ next_article.title }}</span>
+              <span class="pagination-article-date">{{ next_article.published_at | date: format: 'short_month' }}</span>
+              <span class="icon icon-arrow-right pagination-button-icon pagination-article-button-icon"></span>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endcomment %}
+
+
+{% schema %}
+{
+  "name": "Article",
+  "class": "article-details",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_share_buttons",
+      "label": "Show share buttons",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

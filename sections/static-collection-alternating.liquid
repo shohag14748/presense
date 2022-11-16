@@ -1,0 +1,112 @@
+{% paginate collection.products by section.settings.products-per-page %}
+  {%
+    render 'collection-header',
+    collection_image: section.settings.show_featured_image,
+  %}
+
+  <div class="module-wrapper style-default">
+    <div
+      class="
+        module
+        collection
+        collection--alternating
+        collection--banner-{{ section.settings.show_featured_image }}
+      "
+    >
+    {% unless collection.image and section.settings.show_featured_image %}
+      <div class="module-header collection-header">
+        <div class="module-title">
+          {% if collection.handle == 'all' %}
+            <h1>{{ 'collections.collection.all_products' | t }}</h1>
+          {% else %}
+            <h1>{{ collection.title }}</h1>
+          {% endif %}
+        </div>
+
+        {% if collection.description != blank %}
+          <div
+            class="
+              module-subtitle
+              collection-subtitle
+              rte
+            "
+          >
+            {{ collection.description }}
+          </div>
+        {% endif %}
+        </div>
+      {% endunless %}
+
+      <div class="module-body collection-body">
+        {% assign product_count = collection.products.size | plus: 0 %}
+
+        <div class="collection-list">
+          {% if product_count > 0 %}
+            {% for product in collection.products %}
+              {% capture collection_alternating_cycle %}{% cycle 'left', 'right' %}{% endcapture %}
+
+              {%
+                render 'collection-item-alternating',
+                product: product,
+                collection_alternating_cycle: collection_alternating_cycle,
+              %}
+            {% endfor %}
+          {% else %}
+            <p class="empty">
+              {{ 'collections.collection.no_products' | t }}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if paginate.previous or paginate.next %}
+    {%
+      render 'pagination',
+      paginate: paginate,
+    %}
+  {% endif %}
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "Collection page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "label": "Show collection image"
+    },
+    {
+      "type": "range",
+      "id": "products-per-page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 50,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Stock level indicator"
+    },
+    {
+      "type": "checkbox",
+      "id": "stock_overlay_show",
+      "label": "Show indicator",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "stock-overlay-threshold",
+      "label": "Display when stock is lower than:",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    }
+  ]
+}
+
+{% endschema %}

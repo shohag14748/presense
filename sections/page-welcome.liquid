@@ -1,0 +1,231 @@
+{% liquid
+  assign resource = section.settings
+  assign background_color = resource.background_color
+  assign logo = resource.image
+  assign header = resource.header
+  assign text_1 = resource.text_1
+  assign cta_label_1 = resource.cta_label_1
+  assign cta_url_1 = resource.cta_url_1
+  assign cta_color_1 = resource.cta_color_1
+  assign text_2 = resource.text_2
+  assign cta_label_2 = resource.cta_label_2
+  assign cta_url_2 = resource.cta_url_2
+  assign cta_color_2 = resource.cta_color_2
+  assign text_3 = resource.text_3
+  assign cta_label_3 = resource.cta_label_3
+  assign cta_url_3 = resource.cta_url_3
+  assign cta_color_3 = resource.cta_color_3
+  assign text_4 = resource.text_4
+  assign video = resource.video
+  assign video_play_image = resource.video_play_image
+  assign video_image = resource.video_image
+%}
+
+{%- if background_color != "rgba(0,0,0,0)" or cta_color_1 != "rgba(0,0,0,0)" or cta_color_2 != "rgba(0,0,0,0)" or cta_color_3 != "rgba(0,0,0,0)" -%}
+  {% style %}
+    {%- if background_color != "rgba(0,0,0,0)" -%}
+      body.welcome-page, .welcome {
+        background-color: {{ background_color }}!important;
+      }
+    {%- endif -%}
+    {%- if cta_color_1 != "rgba(0,0,0,0)" -%}
+      .btn-1 {
+        background-color: {{ cta_color_1 }};
+      }
+    {%- endif -%}
+    {%- if cta_color_2 != "rgba(0,0,0,0)" -%}
+      .btn-2 {
+        background-color: {{ cta_color_2 }};
+      }
+    {%- endif -%}
+    {%- if cta_color_3 != "rgba(0,0,0,0)"  -%}
+      .btn-3 {
+        background-color: {{ cta_color_3 }};
+      }
+    {%- endif -%}
+  {% endstyle %}
+{%- endif -%}
+
+
+<div class="welcome">
+  <div class="welcome__container">
+    {%- if logo != blank -%}
+      <div class="welcome__logo-container">
+        <img src="{{ logo | img_url: '208x', scale: 2 }}" alt="{{ logo.alt }}">
+      </div>
+    {%- endif -%}
+
+    {%- if header != blank -%}
+      <h1 class="welcome__heading">{{ header }}</h1>
+    {%- endif -%}
+    {%- if text_1 != blank -%}
+      <div class="welcome__text-container welcome__text-container-1">{{ text_1 }}</div>
+    {%- endif -%}
+    {%- if cta_label_1 != blank and cta_url_1 != blank -%}
+      <a href="{{ cta_url_1 }}" class="welcome__button btn-1">{{ cta_label_1 }}{% include 'welcome-arrow' %}</a>
+    {%- endif -%}
+    {%- if text_2 != blank -%}
+    <div class="welcome__text-container welcome__text-container-2">{{ text_2 }}</div>
+    {%- endif -%}
+    {%- if cta_label_2 != blank and cta_url_2 != blank -%}
+      <a href="{{ cta_url_2 }}" class="welcome__button btn-2">{{ cta_label_2 }}{% include 'welcome-arrow' %}</a>
+    {%- endif -%}
+    {%- if text_3 != blank -%}
+      <div class="welcome__text-container welcome__text-container-3">{{ text_3 }}</div>
+    {%- endif -%}
+    {%- if cta_label_3 != blank and cta_url_3 != blank -%}
+      <a href="{{ cta_url_3 }}" class="welcome__button btn-3">{{ cta_label_3 }}{% include 'welcome-arrow' %}</a>
+    {%- endif -%}
+    {%- if video != blank -%}
+
+      {% assign video_url = "" %}
+      {%- if video.type == "youtube" -%}
+        {% assign video_url = "https://www.youtube.com/embed/" | append: video.id |  append: "?autoplay=1" %}
+      {%- else -%}
+        {% assign video_url = "https://player.vimeo.com/video/" | append: video.id | append: "?autoplay=1" %}
+      {%- endif -%}
+
+      <a href="{{ video_url }}" class="welcome__video-button" data-video-url="">
+        <div class="welcome__video-button-container">
+          {%- if video_image != blank -%}
+            <img src="{{ video_image | img_url: '445x', scale: 2 }}" alt="{{ video_image.alt }}">
+          {%- endif -%}
+          {%- if video_play_image != blank or text_4 != blank -%}
+            <div class="welcome__video-button-content">
+              {%- if video_play_image != blank -%}
+                <img class="welcome__video-play-image" src="{{ video_play_image | img_url: '65x', scale: 2 }}" alt="{{ video_play_image.alt }}">
+              {%- endif -%}
+              {%- if text_4 != blank -%}
+                <div class="welcome__video-button-text">{{ text_4 }}</div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+        </div>
+      </a>
+    {%- endif -%}
+  </div>
+
+</div>
+
+<div id="video-popup">
+  <div class="video-container">
+    <div class="close-button"></div>
+    <div class="embed-container">
+      <div class="video-wrapper">
+        <iframe src="" width="850" height="480" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        <video preload="auto" controls playsinline>
+          <source src="" type="video/mp4" />
+          Your browser does not support our video.
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "welcome",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Page background color"
+      },
+      {
+        "type": "image_picker",
+        "id":	"image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "header",
+        "label": "Header"
+      },
+      {
+        "type": "richtext",
+        "id": "text_1",
+        "label": "Text 1"
+      },
+      {
+        "type": "text",
+        "id": "cta_label_1",
+        "label": "CTA label 1"
+      },
+      {
+        "type": "url",
+        "id": "cta_url_1",
+        "label": "CTA url 1"
+      },
+      {
+        "type": "color",
+        "id": "cta_color_1",
+        "label": "CTA color 1"
+      },
+      {
+        "type": "richtext",
+        "id": "text_2",
+        "label": "Text 2"
+      },
+      {
+        "type": "text",
+        "id": "cta_label_2",
+        "label": "CTA label 2"
+      },
+      {
+        "type": "url",
+        "id": "cta_url_2",
+        "label": "CTA url 2"
+      },
+      {
+        "type": "color",
+        "id": "cta_color_2",
+        "label": "CTA color 2"
+      },
+      {
+        "type": "richtext",
+        "id": "text_3",
+        "label": "Text 3"
+      },
+      {
+        "type": "text",
+        "id": "cta_label_3",
+        "label": "CTA label 3"
+      },
+      {
+        "type": "url",
+        "id": "cta_url_3",
+        "label": "CTA url 3"
+      },
+      {
+        "type": "color",
+        "id": "cta_color_3",
+        "label": "CTA color 3"
+      },
+      {
+        "type": "richtext",
+        "id": "text_4",
+        "label": "Video text"
+      },
+      {
+        "type": "video_url",
+        "accept": ["vimeo", "youtube"],
+        "id": "video",
+        "label": "Video link",
+        "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+        "info": "Add a Youtube or a Vimeo video"
+      },
+      {
+        "type": "image_picker",
+        "id": "video_play_image",
+        "label": "Play button"
+      },
+      {
+        "type": "image_picker",
+        "id": "video_image",
+        "label": "Video image"
+      }
+    ]
+  }
+{% endschema %}

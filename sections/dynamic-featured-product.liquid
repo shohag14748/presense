@@ -1,0 +1,241 @@
+{% assign product = all_products[section.settings.product_handle] %}
+{% assign onboarding = false %}
+{% if product.empty? %}
+  {% assign onboarding = true %}
+{% endif %}
+
+{% assign form_id = section.id %}
+{% unless onboarding %}
+  {% assign form_id = form_id | append: '-' | append: product.id %}
+{% endunless %}
+
+{%
+  render 'product-main',
+  product: product,
+  form_id: form_id,
+  onboarding: onboarding,
+  is_featured: true,
+  show_spb: settings.show_spb,
+  section_type: 'dynamic-featured-product',
+  use_history: false
+%}
+
+{% schema %}
+{
+  "name": "Featured product",
+  "class": "dynamic-featured-product",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product_handle",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "paragraph",
+      "content": "Learn more about [media types](https://help.shopify.com/en/manual/products/product-media/product-media-types)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable image zoom",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_enable_video_autoplay",
+      "label": "Enable video autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_enable_video_looping",
+      "label": "Enable video looping",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "vendor",
+      "name": "Vendor",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "social",
+      "name": "Social",
+      "limit": 1
+    },
+    {
+      "type": "view_more",
+      "name": "View more link",
+      "limit": 1
+    },
+    {
+      "type": "product_goal",
+      "name": "Product goal",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Inventory"
+        },
+        {
+          "type": "text",
+          "id": "product_goal_starting_quantity",
+          "label": "Starting quantity",
+          "info": "To start your goal's progress at 0%, enter a number equal to your Featured product's current inventory.  If you have already made pre-sales, enter a number higher than the product's inventory to account for the progress you've made."
+        },
+        {
+          "type": "text",
+          "id": "product_goal",
+          "label": "Goal quantity",
+          "info": "This value represents the number of sales/pre-orders you'd like to make before funding is completed."
+        },
+        {
+          "type": "checkbox",
+          "id": "product_goal_use_quantity",
+          "label": "Show product goal as quantity",
+          "info": "This option will change the product goal to show units sold instead of money raised.",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Goal End"
+        },
+        {
+          "type": "text",
+          "id": "product_sale_goal_date_time",
+          "label": "End date and time",
+          "info": "The mm/dd/yyyy hh:mm format is required. For example, June 21st 2022 at 3pm would be 06/21/2022 15:00",
+          "default": "06/21/2022 15:00"
+        }
+      ]
+    },
+    {
+      "type": "additional_links",
+      "name": "Additional text",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "[Learn more about additional info blocks](https://support.pixelunion.net/hc/en-us/articles/360026525494)"
+        },
+        {
+          "type": "text",
+          "id": "additional_info_text",
+          "label": "Text"
+        },
+        {
+          "type": "url",
+          "id": "additional_info_url",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "additional_info_icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "info",
+              "label": "Information (i)"
+            },
+            {
+              "value": "question-mark",
+              "label": "Question mark"
+            },
+            {
+              "value": "ruler",
+              "label": "Ruler"
+            },
+            {
+              "value": "envelope",
+              "label": "Envelope"
+            },
+            {
+              "value": "pencil",
+              "label": "Pencil"
+            },
+            {
+              "value": "shirt",
+              "label": "Shirt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "form",
+      "name": "Form",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Customize form features for the product in the products portion of the theme settings."
+        }
+      ]
+    },
+    {
+      "type": "rating",
+      "name": "Product rating",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "To display a rating, add a product rating app. [Learn more](https://apps.shopify.com/product-reviews)"
+        }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Custom liquid",
+          "info": "Add app snippets or other Liquid code to create advanced customizations."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Product",
+      "name": "Featured product",
+      "blocks": [
+        {
+          "type": "title"
+        },
+        {
+          "type": "price"
+        },
+        {
+          "type": "form"
+        },
+        {
+          "type": "view_more"
+        },
+        {
+          "type": "social"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

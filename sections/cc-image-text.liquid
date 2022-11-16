@@ -1,0 +1,212 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="image-text"
+></script>
+
+<div class="module-wrapper style-{{ section.settings.style }} border {{ section.settings.section_class }}" id="image-text">
+
+  {% if section.settings.title != blank or section.settings.subtitle != blank or section.settings.desc != blank or section.settings.extra != blank %}
+      <div class="module-header">
+        {% if section.settings.subtitle != blank %}
+          <p class="module-subtitle">
+            {{ section.settings.subtitle }}
+          </p>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h3 class="module-title dynamic-testimonials-title">
+            {{ section.settings.title }}
+          </h3>
+        {% endif %}
+        {% if section.settings.desc != blank %}
+          <p class="module-desc">
+            {{ section.settings.desc }}
+          </p>
+        {% endif %}
+        {% if section.settings.extra != blank %}
+          <p class="module-extra">
+            {{ section.settings.extra }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+  <div class="blocks">
+    {% for block in section.blocks %}   
+    <div class="wraper {% if block.settings.image_position %}right-image{% endif %}" style="{% if block.settings.image_position %}flex-direction: row-reverse;{% endif %}">
+      <div class="image-col">
+        {% if block.settings.image %}
+          <div class="block-image" style="{% if block.settings.image_height != blank %}height: {{ block.settings.image_height }};{% endif %}">
+            {%
+              render 'rimg',
+              img: block.settings.image,
+              size: '600x1000',
+              lazy: false,
+              crop: false
+            %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="text-col">
+        <div class="content">
+          {% if block.settings.icon != blank %}
+            <div class="module-block-icon">
+              {{ block.settings.icon }}
+            </div>
+          {% endif %}
+          {% if block.settings.title != blank %}
+            <h3 class="module-block-title">
+              {{ block.settings.title }}
+            </h3>
+          {% endif %}
+          {% if block.settings.desc != blank %}
+            <p class="module-block-desc">
+              {{ block.settings.desc }}
+            </p>
+          {% endif %}
+          {% if block.settings.btn != blank %}
+            <a class="dynamic-button button outline" href="{{ block.settings.btn_link }}">
+              {{ block.settings.btn }}  <span class="icon icon-arrow-right"></span>
+            </a>
+          {% endif %}
+
+          
+              {% if block.settings.show_app %}
+              <div class="app">
+                {% if block.settings.apple_app_url != blank %}
+                <a class="app-btn" href="{{ block.settings.apple_app_url }}">
+                  <img src="https://cdn.shopify.com/s/files/1/0558/3097/0547/files/presence-app-store-badge.png?v=1661272869"/>
+                </a>
+                {% endif %}
+                {% if block.settings.android_app_url != blank %}
+                <a class="app-btn" href="{{ block.settings.android_app_url }}">
+                  <span>COMING SOON</span>
+                  <img src="https://cdn.shopify.com/s/files/1/0558/3097/0547/files/presence-play-store-badge-faded.png?v=1661272869"/>
+                </a>
+                {% endif %}
+              </div>
+              {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image and Text",
+  "class":"image-text",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subheading"
+    },
+    {
+      "type": "textarea",
+      "id": "desc",
+      "label": "Section description"
+    },
+    {
+      "type": "textarea",
+      "id": "extra",
+      "label": "Extra text"
+    },
+    {
+      "type": "text",
+      "id": "section_class",
+      "label": "Section class"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "Image-and-Text",
+      "name": "Image and Text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Block image"
+        },
+        {
+          "type": "checkbox",
+          "id": "image_position",
+          "label": "Image position right"
+        },
+        {
+          "type": "textarea",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Block Heading"
+        },
+        {
+          "type": "textarea",
+          "id": "desc",
+          "label": "Block description"
+        },
+        {
+          "type": "text",
+          "id": "btn",
+          "label": "Button text",
+          "default": "LEARN MORE"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button link"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_app",
+          "label": "Show app option"
+        },
+        {
+          "type": "text",
+          "id": "apple_app_url",
+          "label": "Apple app link"
+        },
+        {
+          "type": "text",
+          "id": "android_app_url",
+          "label": "Android app link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "image",
+      "name": "Image and Text",
+      "settings": {
+        "style": "default"
+      }
+    }
+  ]
+}
+
+{% endschema %}

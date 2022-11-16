@@ -1,0 +1,214 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="dynamic-testimonials"
+></script>
+
+  <div class="module-wrapper style-{{ section.settings.style }} border">
+
+<div class="container">   
+<div class="wraper">
+    {% if section.settings.title != blank or section.settings.subtitle != blank %}
+      <div class="module-header">
+        {% if section.settings.subtitle != blank %}
+          <p class="module-subtitle">
+            {{ section.settings.subtitle }}
+          </p>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h3 class="module-title dynamic-testimonials-title">
+            {{ section.settings.title }}
+          </h3>
+        {% endif %}
+        {% if section.settings.desc != blank %}
+          <p class="module-desc">
+            {{ section.settings.desc }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+    <!-- Slider main container -->
+<div class="sp-wrap">
+    <div class="swiper swiper-container-{{ section.id }}">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper" >
+          {% for block in section.blocks %}
+              <div class="swiper-slide">
+                <div class="dynamic-testimonials-slides-list-item-container">
+                  <div class="dynamic-testimonials-slides-list-item-body">
+                    {% if block.settings.image %}
+                      <div class="reviwe-image">
+                        {%
+                          render 'rimg',
+                          img: block.settings.image,
+                          size: '700x',
+                          lazy: false,
+                          crop: false
+                        %}
+                      </div>
+                    {% endif %}
+<div class="desc">
+                    <div class="dynamic-testimonial-quote">
+                      {{ block.settings.quote }}
+                    </div>
+<div class="author">
+{% if block.settings.author_image %}
+  <div class="author-image">
+    {%
+      render 'rimg',
+      img: block.settings.author_image,
+      size: '1440x1412',
+      lazy: false,
+      crop: false
+    %}
+  </div>
+{% endif %}
+{% if block.settings.author %}
+<div class="dynamic-testimonial-author">
+  {{ block.settings.author }}
+</div>
+{% endif %}
+</div>
+</div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+        </div>
+      </div>
+      <!-- If we need navigation buttons -->
+{% comment %}
+      <div class="swiper-btn-prev swiper-btn btn-prev-{{ section.id }}"><span class="icon icon-angle-left"></span></div>
+      <div class="swiper-btn-next swiper-btn btn-next-{{ section.id }}"><span class="icon icon-angle-right"></span></div>
+{% endcomment %}
+  </div>
+</div>   
+
+</div>
+</div>
+<script>
+new Swiper('.swiper-container-{{ section.id }}', {
+    loop: true,
+    navigation: {
+      nextEl: ".btn-next-{{ section.id }}",
+      prevEl: ".btn-prev-{{ section.id }}",
+    },
+    slidesPerView: 1.1,
+    paginationClickable: true,
+    spaceBetween: 20,
+    centeredSlides: true,
+    speed: 4000,
+    autoplay: {
+      delay: 1,
+    },
+    breakpoints: {
+      720: {
+          slidesPerView: 2,
+          spaceBetween: 28,
+          resistanceRatio: 0.85
+      },
+      1020: {
+          slidesPerView: 2.6,
+          spaceBetween: 28,
+          resistanceRatio: 0.85
+      }
+    },
+});
+</script>
+<style>
+  .swiper-container-{{ section.id }} .swiper-wrapper{
+    transition-timing-function: linear;
+  }
+</style>
+{% schema %}
+{
+  "name": "Testimonial type 2",
+  "class":"testimonial-type-2",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Testimonials"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "desc",
+      "label": "Description"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "background image"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author name"
+        },
+        {
+          "type": "image_picker",
+          "id": "author_image",
+          "label": "Author image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Testimonial type 2",
+      "settings": {
+        "style": "default"
+      },
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Showcase up to six testimonials to build trust with potential customers.</p>"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Showcase up to six testimonials to build trust with potential customers.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}
